@@ -1,0 +1,36 @@
+# Status mapping
+# format: state:actual_Jira_state
+# linex starting with '#' are left out
+# empty lines are left out
+
+dev:Needs testing on DEV
+staging:Needs testing on staging
+testing:Testing
+needs testing:Needs testing
+open:Otevřeno
+in progress:Rozpracováno
+closed:Uzavřeno
+ukoly:Úkoly
+done:Hotovo
+icebox:IceBox
+not yet started:Not Yet Started
+started:Started
+finished:Finished
+delivered:Delivered
+accepted:Accepted
+rejected:Rejected
+awaiting deployment:Awaiting deployment
+backlog:Backlog
+selected for development:Selected for development
+in review:In Review
+canceled:Canceled
+cancelled:Cancelled
+in mailforce:In Mailforce
+under review:Under Review
+approved:Approved
+archived:Archived
+ideas:Ideas
+working on:Working On
+focus On/Priority:Focus On/Priority
+blocked:Blocked
+pr:PR
