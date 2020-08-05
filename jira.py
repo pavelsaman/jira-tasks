@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 #########################################################################
 # Finds all Jira issues in specified projects and in particular states. #
 # Jira statuses are projects could be defined in:                       #
@@ -24,8 +26,9 @@ import os
 ##############################################################################################################
 
 # read Jira statuses from a file
-def read_statuses_from_file(file_name):
+def read_statuses_from_file(orig_file_name):
 	statuses = {}
+	file_name = orig_file_name.replace('~', os.environ.get("HOME"))
 	if not os.path.isfile(file_name):
 		return statuses
 	with open(file_name, 'r') as reader:
@@ -48,8 +51,9 @@ def read_statuses_from_env(env_var_name):
 	return statuses
 
 # read Jira projects from a file
-def read_projects_from_file(file_name):
+def read_projects_from_file(orig_file_name):
 	projects = []
+	file_name = orig_file_name.replace('~', os.environ.get("HOME"))
 	if not os.path.isfile(file_name):
 		return projects
 	with open(file_name, 'r') as reader:
@@ -155,8 +159,8 @@ AUTH = HTTPBasicAuth(JIRA_USER, JIRA_API_KEY)
 HEADERS = {
    "Accept": "application/json"
 }
-STATUSES_FILE_NAME = '.statuses'
-PROJECTS_FILE_NAME = '.projects'
+STATUSES_FILE_NAME = '~/bin/.statuses'
+PROJECTS_FILE_NAME = '~/bin/.projects'
 STATUSES_ENV_NAME = 'JIRA_STATUSES'
 PROJECTS_ENV_NAME = 'JIRA_PROJECTS'
 STATUSES = {} or read_statuses_from_file(STATUSES_FILE_NAME) or read_statuses_from_env(STATUSES_ENV_NAME)
