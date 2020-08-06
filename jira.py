@@ -183,7 +183,7 @@ if __name__ == '__main__':
 
 	# arguments
 	parser = argparse.ArgumentParser(description='Show Jira tickets in particular states.')
-	parser.add_argument("--status", nargs='?', const='all', type=str,
+	parser.add_argument("-s", "--status", nargs='?', const='all', type=str,
 		help="Comma separated string of states in Jira.")
 	parser.add_argument("--statushelp", action='store_true',
 		help="Print all Jira statuses.")
