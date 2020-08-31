@@ -18,12 +18,15 @@
 #########################################################################
 
 from requests.auth import HTTPBasicAuth
+from types import MappingProxyType
 import requests
 import argparse
 import sys
 import os
 
 ##############################################################################################################
+
+EMPTY = ''
 
 # read Jira statuses from a file
 def read_statuses_from_file(orig_file_name):
@@ -33,9 +36,9 @@ def read_statuses_from_file(orig_file_name):
 		return statuses
 	with open(file_name, 'r') as reader:
 		for line in reader:			
-			if line[0] == '#' or line == '\n' or line == '\r\n':
+			if line[0] == '#' or '\n' in line:
 				continue
-			key, value = line.replace('\n', '').split(':')
+			key, value = line.replace('\n', EMPTY).split(':')
 			statuses[key] = value
 	return statuses
 
@@ -58,9 +61,9 @@ def read_projects_from_file(orig_file_name):
 		return projects
 	with open(file_name, 'r') as reader:
 		for line in reader:			
-			if line[0] == '#' or line == '\n' or line == '\r\n':
+			if line[0] == '#' or '\n' in line:
 				continue
-			projects.append(line.replace('\n', ''))
+			projects.append(line.replace('\n', EMPTY))
 	return projects
 
 # read Jira projects from env variable
@@ -121,7 +124,6 @@ def issues_pretty_print(result_json):
 				j['fields']['priority']['id'] ,j['fields']['summary']))
 	
 def main(args):
-
 	# only prints all Jira statuses to console
 	if args.statushelp:
 		for k, v in STATUSES.items():
@@ -156,9 +158,9 @@ JIRA_API_KEY = os.getenv('JIRA_API_KEY') or None
 BASE_API_URL = 'https://inveocz.atlassian.net/rest/api/3/'
 BROWSE_BASE_URL = 'https://inveocz.atlassian.net/browse/'
 AUTH = HTTPBasicAuth(JIRA_USER, JIRA_API_KEY)
-HEADERS = {
+HEADERS = MappingProxyType({
    "Accept": "application/json"
-}
+})
 STATUSES_FILE_NAME = '~/bin/.statuses'
 PROJECTS_FILE_NAME = '~/bin/.projects'
 STATUSES_ENV_NAME = 'JIRA_STATUSES'
@@ -166,13 +168,13 @@ PROJECTS_ENV_NAME = 'JIRA_PROJECTS'
 STATUSES = {} or read_statuses_from_file(STATUSES_FILE_NAME) or read_statuses_from_env(STATUSES_ENV_NAME)
 PROJECTS = [] or read_projects_from_file(PROJECTS_FILE_NAME) or read_projects_from_env(PROJECTS_ENV_NAME)
 PROJECTS = ['"' + i + '"' for i in PROJECTS] # double quotes around project names
-PRIORITY = {
-	'1': 'Highest',
-	'2': 'High',
-	'3': 'Medium',
-	'4': 'Low',
-	'5': 'Lowest'
-}
+PRIORITY = MappingProxyType({
+	1: 'Highest',
+	2: 'High',
+	3: 'Medium',
+	4: 'Low',
+	5: 'Lowest'
+})
 
 ##############################################################################################################
 
