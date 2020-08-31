@@ -104,9 +104,9 @@ def requirements():
 
 # searches
 def get_test_tickets(env):	
-	query = {
+	query = MappingProxyType({
 		'jql': 'project in ({0}) AND status in ("{1}")'.format(','.join(PROJECTS), env)
-	}
+	})
 	response = requests.request("GET", BASE_API_URL + 'search', headers=HEADERS, params=query, auth=AUTH)
 	if response.status_code == 200:
 		return response.json()
