@@ -30,17 +30,17 @@ EMPTY = ''
 
 # read Jira statuses from a file
 def read_statuses_from_file(orig_file_name):
-	statuses = {}
 	file_name = orig_file_name.replace('~', os.environ.get("HOME"))
 	if not os.path.isfile(file_name):
 		return statuses
 	with open(file_name, 'r') as reader:
-		for line in reader:			
-			if line[0] == '#' or '\n' in line:
-				continue
-			key, value = line.replace('\n', EMPTY).split(':')
-			statuses[key] = value
-	return statuses
+		statuses = reader.read().split('\n')
+	statuses = [status for status in statuses if len(status)>0 and status[0] != '#']
+	statuses_dict = {}
+	for status in statuses:
+		key, value = status.split(':')
+		statuses_dict[key] = value
+	return statuses_dict
 
 # read Jira statuses from env variable
 # format: key:value,key1:value1,...keyN:valueN
@@ -55,16 +55,12 @@ def read_statuses_from_env(env_var_name):
 
 # read Jira projects from a file
 def read_projects_from_file(orig_file_name):
-	projects = []
 	file_name = orig_file_name.replace('~', os.environ.get("HOME"))
 	if not os.path.isfile(file_name):
 		return projects
 	with open(file_name, 'r') as reader:
-		for line in reader:			
-			if line[0] == '#' or '\n' in line:
-				continue
-			projects.append(line.replace('\n', EMPTY))
-	return projects
+		projects = reader.read().split('\n')
+	return [project for project in projects if len(project)>0 and project[0] != '#']
 
 # read Jira projects from env variable
 # format: project1,project2,...,projectN
@@ -161,8 +157,8 @@ AUTH = HTTPBasicAuth(JIRA_USER, JIRA_API_KEY)
 HEADERS = MappingProxyType({
    "Accept": "application/json"
 })
-STATUSES_FILE_NAME = '~/bin/.statuses'
-PROJECTS_FILE_NAME = '~/bin/.projects'
+STATUSES_FILE_NAME = './.statuses'
+PROJECTS_FILE_NAME = './.projects'
 STATUSES_ENV_NAME = 'JIRA_STATUSES'
 PROJECTS_ENV_NAME = 'JIRA_PROJECTS'
 STATUSES = {} or read_statuses_from_file(STATUSES_FILE_NAME) or read_statuses_from_env(STATUSES_ENV_NAME)
